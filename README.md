@@ -4,6 +4,12 @@
 
 The `Logo` component displays a carousel of logos from various partners using the `@splidejs/react-splide` library. It creates an engaging visual representation of partner logos that are shuffled and displayed in a looping manner.
 
+## Sample Previews
+
+![Sample Preview 1](https://github.com/AroshaRavishan/Vertical-Logo-slider-React-Next/blob/main/sample%20preview%20image.png)
+![Sample Preview 2](https://github.com/AroshaRavishan/Vertical-Logo-slider-React-Next/blob/main/sample%20preview.png)
+
+
 ## Features
 
 - **Responsive Design**: The component adapts to different screen sizes, displaying up to four logo carousels on larger screens and fewer on smaller ones.
