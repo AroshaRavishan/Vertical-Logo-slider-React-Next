@@ -29,7 +29,7 @@ const partners = [
 ];
 
 const Logo = () => {
-    const splideOptions = {
+    const SplideOptions = {
         type: 'loop',
         direction: 'ttb',
         height: '5rem',
@@ -50,31 +50,35 @@ const Logo = () => {
         autoStart: true,
     };
 
-    // Function to shuffle partners array
-    const shufflePartners = () => {
-        return [...partners].sort(() => Math.random() - 0.5);
+    const intervalOffsets = [0, 2000, 4000, 1000];
+
+    // Function to shuffle an array
+    const shuffleArray = (array) => {
+        return [...array].sort(() => Math.random() - 0.5);
     };
 
-    // State to hold shuffled partners for each Splide instance
-    const [splide1Partners, setSplide1Partners] = useState(shufflePartners());
-    const [splide2Partners, setSplide2Partners] = useState(shufflePartners());
-    const [splide3Partners, setSplide3Partners] = useState(shufflePartners());
-    const [splide4Partners, setSplide4Partners] = useState(shufflePartners());
+    // Function to divide partners into groups and shuffle each group
+    const getShuffledGroups = () => {
+        const groupSize = Math.ceil(partners.length / 6);
+        const shuffledPartners = shuffleArray(partners);
+        return [
+            shuffleArray(shuffledPartners.slice(0, groupSize)),
+            shuffleArray(shuffledPartners.slice(groupSize, groupSize * 2)),
+            shuffleArray(shuffledPartners.slice(groupSize * 2, groupSize * 3)),
+            shuffleArray(shuffledPartners.slice(groupSize * 3)),
+        ];
+    };
+
+    // State to hold shuffled partner groups for each Splide instance
+    const [partnerGroups, setPartnerGroups] = useState(getShuffledGroups());
 
     useEffect(() => {
-        // Update partners when the component mounts
-        setSplide1Partners(shufflePartners());
-        setSplide2Partners(shufflePartners());
-        setSplide3Partners(shufflePartners());
-        setSplide4Partners(shufflePartners());
+        // Update partner groups when the component mounts
+        setPartnerGroups(getShuffledGroups());
 
-        
-        // Set up an interval to reshuffle partners every 30 seconds
+        // Set up an interval to reshuffle partner groups every 30 seconds
         const reshuffleInterval = setInterval(() => {
-            setSplide1Partners(shufflePartners());
-            setSplide2Partners(shufflePartners());
-            setSplide3Partners(shufflePartners());
-            setSplide4Partners(shufflePartners());
+            setPartnerGroups(getShuffledGroups());
         }, 30000);
 
         // Clean up the interval on component unmount
@@ -85,13 +89,13 @@ const Logo = () => {
         <div className='container'>
             <div className="hidden lg:grid grid-cols-1 lg:grid-cols-12 h-[100px]">
                 <div className="col-span-1 lg:col-span-1 border-bottom"></div>
-                <div className="col-span-1 lg:col-span-10 border-bottom"></div>
+                <div className="col-span-1 lg:col-span-10 border-left border-bottom border-right"></div>
                 <div className="col-span-1 lg:col-span-1 border-bottom"></div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-12 h-[100px]">
                 <div className="col-span-1 lg:col-span-1 border-bottom"></div>
                 <div className="col-span-1 lg:col-span-10 border-left flex items-center justify-center border-bottom border-right">
-                    <p className="text-base sm:text-xl text-black-800 font-normal text-center">Certification Alliance: Our Approval and Accreditation Partners(Sample Logos)</p>
+                    <p className="text-base sm:text-xl text-black-800 font-normal text-center">Growing together: Companies thriving with our support</p>
                 </div>
                 <div className="col-span-1 lg:col-span-1 border-bottom"></div>
             </div>
@@ -100,54 +104,19 @@ const Logo = () => {
                 {/* Four Sliders */}
                 <div className="col-span-1 lg:col-span-10 border-left border-bottom border-right py-2">
                     <div className="flex lg:grid grid-cols-1 lg:grid-cols-4 gap-4 justify-center">
-                        {/* First Slider */}
-                        <div className="lg:col-span-1">
-                            <Splide options={splideOptions}>
-                                {splide1Partners.map((partner, idx) => (
-                                    <SplideSlide key={idx}>
-                                        <div className="flex my-3 lg:my-5 mx-4 justify-center">
-                                            <img src={partner.src} alt={partner.alt} className="w-[120px] h-12 object-contain" />
-                                        </div>
-                                    </SplideSlide>
-                                ))}
-                            </Splide>
-                        </div>
-                        {/* Second Slider */}
-                        <div className="lg:col-span-1">
-                            <Splide options={splideOptions}>
-                                {splide2Partners.map((partner, idx) => (
-                                    <SplideSlide key={idx}>
-                                        <div className="flex my-3 lg:my-5 mx-4 justify-center">
-                                            <img src={partner.src} alt={partner.alt} className="w-[120px] h-12 object-contain" />
-                                        </div>
-                                    </SplideSlide>
-                                ))}
-                            </Splide>
-                        </div>
-                        {/* Third Slider */}
-                        <div className="hidden lg:block lg:col-span-1">
-                            <Splide options={splideOptions}>
-                                {splide3Partners.map((partner, idx) => (
-                                    <SplideSlide key={idx}>
-                                        <div className="flex my-3 lg:my-5 mx-4 justify-center">
-                                            <img src={partner.src} alt={partner.alt} className="w-[120px] h-12 object-contain" />
-                                        </div>
-                                    </SplideSlide>
-                                ))}
-                            </Splide>
-                        </div>
-                        {/* Fourth Slider */}
-                        <div className="hidden lg:block lg:col-span-1">
-                            <Splide options={splideOptions}>
-                                {splide4Partners.map((partner, idx) => (
-                                    <SplideSlide key={idx}>
-                                        <div className="flex my-3 lg:my-5 mx-4 justify-center">
-                                            <img src={partner.src} alt={partner.alt} className="w-[120px] h-12 object-contain" />
-                                        </div>
-                                    </SplideSlide>
-                                ))}
-                            </Splide>
-                        </div>
+                        {partnerGroups.map((group, groupIndex) => (
+                            <div key={groupIndex} className={`lg:col-span-1 ${groupIndex > 1 ? 'hidden lg:block' : ''}`}>
+                                <Splide options={{ ...SplideOptions, interval: 3000 + intervalOffsets[groupIndex] }}>
+                                    {group.map((partner, idx) => (
+                                        <SplideSlide key={idx}>
+                                            <div className="flex my-3 lg:my-5 mx-4 justify-center">
+                                                <img src={partner.src} alt={partner.alt} className="w-auto h-[36px] object-contain" />
+                                            </div>
+                                        </SplideSlide>
+                                    ))}
+                                </Splide>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className="col-span-1 lg:col-span-1 border-bottom"></div>
